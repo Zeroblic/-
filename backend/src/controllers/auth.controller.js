@@ -1,0 +1,46 @@
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { db } from "../config/db.js";
+import { JWT_SECRET } from "../config/config.js";
+
+export const register = (req, res) => {
+  const { username, password } = req.body;
+
+  const hash = bcrypt.hashSync(password, 10);
+
+  db.query(
+    "INSERT INTO user (username, password) VALUES (?, ?)",
+    [username, hash],
+    (err) => {
+      if (err) return res.status(500).json({ msg: "User exists" });
+
+      res.json({ msg: "Register success" });
+    }
+  );
+};
+
+export const login = (req, res) => {
+  const { username, password } = req.body;
+
+  db.query(
+    "SELECT * FROM user WHERE username=?",
+    [username],
+    (err, rows) => {
+      if (rows.length === 0) return res.status(400).json({ msg: "User not found" });
+
+      const user = rows[0];
+
+      if (!bcrypt.compareSync(password, user.password)) {
+        return res.status(400).json({ msg: "Wrong password" });
+      }
+
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      res.json({ msg: "Login success", token });
+    }
+  );
+};
