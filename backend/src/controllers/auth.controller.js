@@ -1,7 +1,7 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { db } from "../config/db.js";
-import { JWT_SECRET } from "../config/config.js";
+import bcrypt from "bcryptjs"; //加密密码
+import jwt from "jsonwebtoken"; //用于生成登录 token，让用户保持登录状态。
+import { db } from "../config/db.js"; 
+import { JWT_SECRET } from "../config/config.js"; //JWT 密钥，所有 token 都要用这个钥匙来签名。
 
 export const register = (req, res) => {
   const { username, password } = req.body;
@@ -34,6 +34,7 @@ export const login = (req, res) => {
         return res.status(400).json({ msg: "Wrong password" });
       }
 
+      //密码正确 → 生成 JWT 登录 token
       const token = jwt.sign(
         { id: user.id, username: user.username },
         JWT_SECRET,
