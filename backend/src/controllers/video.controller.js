@@ -26,11 +26,26 @@ export const getRecommendVideos = (req, res) => {
   const { category, sort } = req.query;
 
   let sql = "SELECT * FROM video WHERE 1=1";
+  const params = [];
 
-  if (category) sql += ` AND category='${category}'`;
-  if (sort) sql += ` ORDER BY ${sort} DESC`;
+  if (category) {
+    sql += " AND category=?";
+    params.push(category);
+  }
 
-  db.query(sql, (err, rows) => res.json(rows));
+  // only allow known sortable fields to avoid SQL injection
+  const sortWhitelist = {
+    create_time: "create_time",
+    views: "views",
+    likes: "likes",
+  };
+  const sortField = sortWhitelist[sort] || "create_time";
+  sql += ` ORDER BY ${sortField} DESC`;
+
+  db.query(sql, params, (err, rows) => {
+    if (err) return res.status(500).json({ msg: "DB error" });
+    res.json(rows);
+  });
 };
 
 export const editVideo = (req, res) => {
