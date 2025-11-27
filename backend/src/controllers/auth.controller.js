@@ -11,13 +11,18 @@ export const register = (req, res) => {
   db.query(
     "INSERT INTO user (username, password) VALUES (?, ?)",
     [username, hash],
-    (err) => {
-      if (err) return res.status(500).json({ msg: "User exists" });
+    (err, result) => {
+
+      if (err) {
+        console.error("注册时数据库错误:", err);
+        return res.status(500).json({ msg: "User exists or DB error", error: err });
+      }
 
       res.json({ msg: "Register success" });
     }
   );
 };
+
 
 export const login = (req, res) => {
   const { username, password } = req.body;
@@ -26,7 +31,15 @@ export const login = (req, res) => {
     "SELECT * FROM user WHERE username=?",
     [username],
     (err, rows) => {
-      if (rows.length === 0) return res.status(400).json({ msg: "User not found" });
+
+      if (err) {
+        console.error("数据库查询错误:", err);
+        return res.status(500).json({ msg: "Database error", error: err });
+      }
+
+      if (!rows || rows.length === 0) {
+        return res.status(400).json({ msg: "User not found" });
+      }
 
       const user = rows[0];
 
@@ -34,7 +47,6 @@ export const login = (req, res) => {
         return res.status(400).json({ msg: "Wrong password" });
       }
 
-      //密码正确 → 生成 JWT 登录 token
       const token = jwt.sign(
         { id: user.id, username: user.username },
         JWT_SECRET,

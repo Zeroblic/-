@@ -1,0 +1,52 @@
+.explore-container {
+    padding: 12px;
+    background: #fafafa;
+    min-height: 100vh;
+}
+
+.explore-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.explore-card {
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.explore-card:hover {
+    transform: scale(1.03);
+}
+
+.explore-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.card-info {
+    padding: 8px;
+}
+
+.title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.author {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+}
+
+.loading-more {
+    text-align: center;
+    padding: 20px 0;
+    color: #666;
+}

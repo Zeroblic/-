@@ -1,0 +1,83 @@
+/* 隐藏滚动条但保留功能 */
+.video-feed-container::-webkit-scrollbar {
+    display: none;
+}
+
+.video-feed-container {
+    width: 100%;
+    height: 100vh;
+    /* 全屏高度 */
+    background-color: #000;
+    overflow-y: scroll;
+    /* 核心：强制垂直方向捕捉 */
+    scroll-snap-type: y mandatory;
+    position: relative;
+}
+
+.video-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    /* 核心：每个元素对齐视口顶部 */
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 视频本身 */
+.video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 保持比例填充，类似抖音 */
+}
+
+/* 右侧交互栏 (点赞/评论/分享) */
+.sidebar {
+    position: absolute;
+    right: 10px;
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+    color: white;
+}
+
+.icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+}
+
+.icon-wrapper svg {
+    font-size: 35px;
+    margin-bottom: 5px;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+/* 底部信息栏 (作者/描述) */
+.footer-info {
+    position: absolute;
+    bottom: 20px;
+    left: 10px;
+    color: white;
+    z-index: 10;
+    width: 70%;
+    text-align: left;
+}
+
+.username {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.description {
+    font-size: 14px;
+    line-height: 1.4;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}

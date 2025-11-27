@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import RecommendCard from "./RecommendCard";
 import "./style.css";
-import type { VideoItem } from "../../mock/videos";
+import { VideoItem } from "../../mock/videos";
 
 interface Props {
     initialVideos: VideoItem[];
@@ -19,28 +19,25 @@ const RecommendFeed: React.FC<Props> = ({ initialVideos }) => {
         if (!hasMore || loading) return;
         setLoading(true);
 
-        const nextPage = page + 1;
-
         await new Promise(r => setTimeout(r, 800));
 
         const newItems = Array.from({ length: 10 }, (_, i) => ({
-            id: nextPage * 10 + i + 1,
+            id: page * 10 + i + 1,
             url: "https://www.w3schools.com/html/mov_bbb.mp4",
-            thumbnailUrl: `https://picsum.photos/id/${nextPage * 10 + i + 30}/400/500`,
-            title: `创意灵感 #${nextPage * 10 + i + 1}`,
-            author: `作者_${nextPage * 10 + i + 1}`,
+            thumbnailUrl: `https://picsum.photos/id/${page * 10 + i + 30}/400/500`,
+            title: `创意灵感 #${page * 10 + i + 1}`,
+            author: `作者_${page * 10 + i + 1}`,
             description: "自动加载视频",
             likes: Math.floor(Math.random() * 1000),
             comments: Math.floor(Math.random() * 200),
         }));
 
         setVideos(prev => [...prev, ...newItems]);
-        setPage(nextPage);
+        setPage(prev => prev + 1);
         setLoading(false);
 
-        if (nextPage > 3) setHasMore(false);
+        if (page > 3) setHasMore(false);
     }, [page, loading, hasMore]);
-
 
     useEffect(() => {
         if (!bottomRef.current) return;

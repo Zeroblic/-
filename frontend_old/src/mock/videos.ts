@@ -9,10 +9,8 @@ export interface VideoItem {
     comments: number;
 }
 
-let uniqueId = 10000;
-
 export const MOCK_VIDEOS: VideoItem[] = Array.from({ length: 20 }, (_, i) => ({
-    id: uniqueId++,
+    id: i + 1,
     url: "https://www.w3schools.com/html/mov_bbb.mp4",
     thumbnailUrl: `https://picsum.photos/id/${i + 10}/400/500`,
     title: `创意灵感 #${i + 1}`,
