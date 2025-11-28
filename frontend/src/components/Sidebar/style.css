@@ -1,0 +1,48 @@
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1e1e1e;
+    color: white;
+    padding: 24px 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.menu a,
+.menu .logout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #ccc;
+    text-decoration: none;
+    font-size: 16px;
+
+    padding: 10px 12px;
+    border-radius: 6px;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.menu a:hover,
+.menu .logout:hover {
+    background: #292929;
+    color: white;
+}
+
+.menu a.active {
+    background: #444;
+    color: white;
+}
+
+.icon {
+    font-size: 18px;
+}

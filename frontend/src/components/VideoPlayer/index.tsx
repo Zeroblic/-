@@ -5,6 +5,7 @@ import { FaHeart, FaCommentDots, FaShare, FaMusic, FaVolumeUp, FaVolumeMute } fr
 // 定义视频数据接口
 export interface VideoItem {
     id: number;
+    title: string;
     url: string;
     author: string;
     description: string;
@@ -29,7 +30,7 @@ const VideoFeed: React.FC<Props> = ({ videos }) => {
 
     return (
         <div className="video-feed-container">
-            {videos.map((video, index) => (
+            {videos.map((video) => (
             <VideoCard 
                 key={video.id} 
                 data={video}

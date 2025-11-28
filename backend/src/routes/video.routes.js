@@ -1,20 +1,27 @@
 import express from "express";
-import { uploadVideo, getMyVideos, getRecommendVideos, editVideo } from "../controllers/video.controller.js";
-import { verifyToken } from "../middleware/auth.js";
-import upload from "../middleware/upload.js";
+import multer from "multer";
+import { publishVideo, getVideoList, getMyVideos} from "../controllers/video.controller.js";
 
 const router = express.Router();
 
-// 上传视频
-router.post("/upload", verifyToken, upload.single("video"), uploadVideo);
+// 配置 multer
+const storage = multer.diskStorage({
+    destination: "src/uploads",
+    filename: (req, file, cb) => {
+        const filename = Date.now() + "_" + file.originalname;
+        cb(null, filename);
+    },
+});
 
-// 我的作品
-router.get("/my", verifyToken, getMyVideos);
+const upload = multer({ storage });
 
-// 推荐视频
-router.get("/list", getRecommendVideos);
+// 上传视频 API
+router.post("/upload", upload.single("video"), publishVideo);
 
-// 编辑视频
-router.put("/:id", verifyToken, editVideo);
+// 获取视频列表（首页推荐）
+router.get("/list", getVideoList);
+
+//获取我的视频列表
+router.get("/my", getMyVideos);
 
 export default router;

@@ -16,6 +16,7 @@ export default function Login() {
             // 假设后端返回：{ token: "xxxxxx" }
             const token = res.data.token;
             localStorage.setItem("token", token);
+            console.log("登录成功，token =", token);
 
             alert("登录成功");
 
