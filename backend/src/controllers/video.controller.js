@@ -178,3 +178,31 @@ export const getVideoListPaged = async (req, res) => {
     res.status(500).json({ msg: "DB error" });
   }
 };
+
+export const updateVideo = async (req, res) => {
+  try {
+    const { video_id, title, description, category, thumbnailUrl } = req.body;
+
+    if (!video_id) {
+      return res.status(400).json({ msg: "video_id is required" });
+    }
+
+    const video = await Video.findByPk(video_id);
+
+    if (!video) {
+      return res.status(404).json({ msg: "视频不存在" });
+    }
+
+    await video.update({
+      title,
+      description,
+      category,
+      thumbnailUrl,
+    });
+
+    res.json({ msg: "更新成功", video });
+  } catch (err) {
+    console.log("修改视频失败：", err);
+    res.status(500).json({ msg: "修改失败" });
+  }
+};

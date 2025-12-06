@@ -26,7 +26,7 @@ const RecommendFeed: React.FC<Props> = ({ initialVideos }) => {
 
         try {
             const res = await fetch(
-                `http://localhost:3001/video/list?page=${nextPage}&pageSize=${PAGE_SIZE}`
+                `http://localhost:3001/video/listpaged?page=${nextPage}&pageSize=${PAGE_SIZE}`
             );
             const data = await res.json();
 
