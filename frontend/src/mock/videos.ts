@@ -1,12 +1,12 @@
 export interface VideoItem {
     id: number;
-    url: string;
-    thumbnailUrl: string;
     title: string;
+    url: string;
     author: string;
     description: string;
     likes: number;
     comments: number;
+    thumbnailUrl: string;
     category: string;
     muted?: boolean;
 }

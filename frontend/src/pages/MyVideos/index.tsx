@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getMyVideosAPI } from "../../api/video";
 import { getUserId } from "../../components/GetUserInfo";
 import type { VideoItem } from "../../components/VideoFeed";
+import VideoFeed from "../../components/VideoFeed";
 import "./style.css";
 import axios from "axios";
 
@@ -10,7 +11,10 @@ const MyVideos = () => {
     const [activeVideo, setActiveVideo] = useState<VideoItem | null>(null); // 当前选中的视频（侧边栏用）
     const [sidebarOpen, setSidebarOpen] = useState(false); // 控制侧边栏打开
 
+    const [playerOpen, setPlayerOpen] = useState(false); // 全屏播放开关
+    const [initialId, setInitialId] = useState<number | null>(null);
     let userId = getUserId();
+    const overlayRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         getMyVideosAPI(userId).then(res => {
@@ -22,12 +26,16 @@ const MyVideos = () => {
     const handleCardClick = (video: VideoItem) => {
         setActiveVideo(video);
         setSidebarOpen(true);
+
+        // 打开短视频播放模式
+        setInitialId(video.id);
+        setPlayerOpen(true);
     };
 
     // 删除视频
     const handleDelete = async () => {
         if (!activeVideo) return alert("无效的视频 ID");
-        
+
         // 二次确认
         if (!confirm("确认删除这个视频吗？删除后不可恢复！")) return;
 
@@ -61,22 +69,22 @@ const MyVideos = () => {
         <div className="my-videos-container">
             <h2 className="my-videos-title">我的作品</h2>
 
-            <div className="explore-grid">
-                {videos.map(v => (
-                    <div
-                        key={v.id}
-                        className="video-card"
-                        onClick={() => handleCardClick(v)} // 点击打开侧边栏
-                    >
-                        <div className="video-wrapper">
-                            <video src={v.url} controls />
+            {!playerOpen && (
+                <div className="explore-grid">
+                    {videos.map((v) => (
+                        <div
+                            key={v.id}
+                            className="video-card"
+                            onClick={() => handleCardClick(v)}
+                        >
+                            <div className="video-wrapper">
+                                <video src={v.url} controls />
+                            </div>
+                            <p>{v.title}</p>
                         </div>
-                        <p>{v.title}</p>
-                    </div>
-                ))}
-            </div>
-
-
+                    ))}
+                </div>
+            )}
             {/* 侧边栏 */}
             <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
                 <div className="sidebar-title">
@@ -91,6 +99,18 @@ const MyVideos = () => {
                     🗑 删除视频
                 </button>
             </div>
+
+            {playerOpen && (
+                <div className="video-overlay" ref={overlayRef}>
+                    <button className="overlay-close" onClick={() => setPlayerOpen(false)}>✖</button>
+                    <VideoFeed
+                        videos={videos}
+                        initialVideoId={initialId ?? undefined}
+                        scrollContainer={overlayRef as unknown as React.RefObject<HTMLDivElement>}       // 传给子组件
+                        onSelect={setActiveVideo}          // 同步右侧工具
+                    />
+                </div>
+            )}
         </div>
     );
 };

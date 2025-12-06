@@ -9,10 +9,8 @@ const Settings = () => {
     //const [password, setPassword] = useState(getUserPw());
     const [theme, setTheme] = useState("light");
     const navigate = useNavigate();
-    console.log("当前用户名:", getUserName());
 
     const handleSave = () => {
-        console.log("解析到的 userId =", getUserId());
 
         const userId = getUserId();  // 你之前写的 token 方法
         const newUsername = username;

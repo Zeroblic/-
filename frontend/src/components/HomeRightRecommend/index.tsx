@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
-import type { VideoItem } from "../../mock/videos";
+import type { VideoItem } from "../VideoFeed";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -16,13 +16,19 @@ const HomeRightRecommend: React.FC<Props> = ({ videos }) => {
         setList(getRandomSix(videos));
     }
 
+    useEffect(() => {
+        if (videos.length > 0) {
+            setList(getRandomSix(videos));
+        }
+    }, [videos]);
+
     return (
         <div className="home-right-recommend">
             <div className="top-bar">
                 热门推荐
                 <button onClick={refresh}>换一换</button>
             </div>
-            
+
             <div className="recommend-list">
                 {list.map(video => (
                     <div key={video.id} className="recommend-card" onClick={() => navigate(`/video/${video.id}`)}>

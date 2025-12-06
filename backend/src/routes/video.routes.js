@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { publishVideo, getVideoList, getMyVideos, deleteVideo} from "../controllers/video.controller.js";
+import { publishVideo, getVideoList, getMyVideos, deleteVideo, likeVideo} from "../controllers/video.controller.js";
 
 const router = express.Router();
 
@@ -26,5 +26,11 @@ router.get("/my", getMyVideos);
 
 // 删除视频 API
 router.post("/delete", deleteVideo);
+
+// 点赞视频 API
+router.post("/like", likeVideo);
+
+// 分页获取视频列表
+router.get("/list", getVideoListPaged);
 
 export default router;

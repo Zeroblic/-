@@ -1,6 +1,4 @@
-import React from "react";
 import "./style.css";
-import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
 const categories = [
@@ -18,10 +16,9 @@ const HeaderTopBar = () => {
             {/* 分类导航 */}
             <div className="top-nav">
                 {categories.map(c => (
-                    <span key={c}>{c}</span>
+                    <span key={c} onClick={() => navigate(`/${c}`)}>{c}</span>
                 ))}
             </div>
-
             {/* 中心内容（搜索框 + 投稿） */}
             <div className="center-content">
                 <div className="search-box">

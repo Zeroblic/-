@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import type { VideoItem } from "../../mock/videos";
+import type { VideoItem } from "../VideoFeed";
 
 interface Props {
     video: VideoItem;

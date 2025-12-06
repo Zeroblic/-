@@ -41,6 +41,25 @@ export const getVideoList = async (req, res) => {
   }
 };
 
+export const getVideoListByCategory = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    if (!category) {
+      return res.status(400).json({ msg: "category is required" });
+    }
+
+    const videos = await Video.findAll({
+      where: { category },
+      order: [["create_time", "DESC"]],
+    });
+
+    res.json(videos);
+  } catch (err) {
+    console.log("获取分类视频失败：", err);
+    res.status(500).json({ msg: "获取失败" });
+  }
+};
 
 export const getMyVideos = async (req, res) => {
   try {
@@ -104,5 +123,58 @@ export const deleteVideo = async (req, res) => {
   } catch (err) {
     console.log("删除失败：", err);
     res.status(500).json({ msg: "删除失败" });
+  }
+};
+
+export const likeVideo = async (req, res) => {
+  try {
+    const { video_id, user_id } = req.body;
+    if (!video_id || !user_id) {
+      return res.status(400).json({ msg: "video_id 和 user_id 必填" });
+    }
+
+    // 1) 原子自增（避免并发丢失）
+    const [affected] = await Video.increment('likes', {
+      by: 1,
+      where: { id: video_id },
+    });
+
+    // 2) 再查一次最新值返回给前端
+    const updated = await Video.findByPk(video_id, {
+      attributes: ['id', 'likes'],
+    });
+    if (!updated) {
+      return res.status(404).json({ msg: "视频不存在" });
+    }
+
+    return res.json({ msg: "点赞成功", video_id, likes: updated.likes });
+
+  } catch (err) {
+    console.log("点赞失败：", err);
+    return res.status(500).json({ msg: "点赞失败" });
+  }
+};
+
+export const getVideoListPaged = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+
+    const offset = (page - 1) * pageSize;
+
+    const { rows, count } = await Video.findAndCountAll({
+      limit: pageSize,
+      offset,
+      order: [["create_time", "DESC"]],
+    });
+
+    res.json({
+      list: rows,
+      total: count,
+      hasMore: page * pageSize < count
+    });
+  } catch (err) {
+    console.error("分页视频获取失败：", err);
+    res.status(500).json({ msg: "DB error" });
   }
 };

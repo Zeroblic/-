@@ -13,7 +13,7 @@ export const sequelize = new Sequelize(
     logging: false, // 可选：关闭日志输出
     pool: {
       max: 10,
-      min: 0,
+      min: 0, 
       acquire: 30000,
       idle: 10000,
     },

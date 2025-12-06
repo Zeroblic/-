@@ -51,7 +51,6 @@ const Create = () => {
                 defaultValue=""
             >
                 <option value="" disabled>选择分类</option>
-                <option value="热门">热门</option>
                 <option value="影视">影视</option>
                 <option value="动画">动画</option>
                 <option value="鬼畜">鬼畜</option>

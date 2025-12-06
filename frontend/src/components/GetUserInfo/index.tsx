@@ -14,7 +14,6 @@ export function getUserId() {
     if (token) {
         try {
             const payload = jwtDecode<MyPayload>(token); // 解析 JWT
-            console.log(payload)
             userId = payload.userId; // 用户 id
         } catch (e) {
             console.error("Token decode error:", e);

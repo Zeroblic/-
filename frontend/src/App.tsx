@@ -1,9 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
-// import RecommendFeed from "./components/RecommendFeed";
-// import VideoFeed from "./components/VideoFeed";
-// import { MOCK_VIDEOS } from "./mock/videos";
 import HomePage from "./pages/Home";
 import VideoPage from "./pages/VideoPage";
 import Login from "./pages/Login";
@@ -13,6 +10,7 @@ import MainLayout from "./layout/MainLayout";
 import MyVideos from "./pages/MyVideos";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Settings from "./pages/Settings";
+import CartegoryVideos from "./pages/CategoryVideos";
 
 function App() {
   return (
@@ -47,6 +45,11 @@ function App() {
         <Route path="/settings" element={
           <ProtectedRoute>
             <Settings />
+          </ProtectedRoute>
+        } />
+        <Route path="/:category" element={
+          <ProtectedRoute>
+            <CartegoryVideos />
           </ProtectedRoute>
         } />
       </Route>

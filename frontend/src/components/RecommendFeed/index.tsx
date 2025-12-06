@@ -1,47 +1,46 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import RecommendCard from "./RecommendCard";
 import "./style.css";
-import type { VideoItem } from "../../mock/videos";
+import type { VideoItem } from "../VideoFeed";
 
 interface Props {
     initialVideos: VideoItem[];
 }
 
+const PAGE_SIZE = 10;
+
 const RecommendFeed: React.FC<Props> = ({ initialVideos }) => {
-    const [videos, setVideos] = useState(initialVideos);
+    const [videos, setVideos] = useState<VideoItem[]>(initialVideos || []);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
     const bottomRef = useRef<HTMLDivElement>(null);
 
+    // 🔥 从后端加载下一页
     const loadMore = useCallback(async () => {
         if (!hasMore || loading) return;
         setLoading(true);
 
         const nextPage = page + 1;
 
-        await new Promise(r => setTimeout(r, 800));
+        try {
+            const res = await fetch(
+                `http://localhost:3001/video/list?page=${nextPage}&pageSize=${PAGE_SIZE}`
+            );
+            const data = await res.json();
 
-        const newItems = Array.from({ length: 10 }, (_, i) => ({
-            id: nextPage * 10 + i + 1,
-            url: "https://www.w3schools.com/html/mov_bbb.mp4",
-            thumbnailUrl: `https://picsum.photos/id/${nextPage * 10 + i + 30}/400/500`,
-            title: `创意灵感 #${nextPage * 10 + i + 1}`,
-            author: `作者_${nextPage * 10 + i + 1}`,
-            description: "自动加载视频",
-            likes: Math.floor(Math.random() * 1000),
-            comments: Math.floor(Math.random() * 200),
-        }));
+            setVideos(prev => [...prev, ...data.list]);
+            setHasMore(data.hasMore);
+            setPage(nextPage);
+        } catch (err) {
+            console.error("分页加载失败:", err);
+        }
 
-        setVideos(prev => [...prev, ...newItems]);
-        setPage(nextPage);
         setLoading(false);
-
-        if (nextPage > 3) setHasMore(false);
     }, [page, loading, hasMore]);
 
-
+    // 🔥 监听滚动到底部
     useEffect(() => {
         if (!bottomRef.current) return;
 
@@ -62,7 +61,7 @@ const RecommendFeed: React.FC<Props> = ({ initialVideos }) => {
     return (
         <div className="explore-container">
             <div className="explore-grid">
-                {videos.map((video, index)   => (
+                {videos.map((video, index) => (
                     <RecommendCard key={`${video.id}-${index}`} video={video} />
                 ))}
             </div>
